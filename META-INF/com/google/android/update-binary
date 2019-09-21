@@ -97,13 +97,14 @@ print_justified() {
 disable_fbe() {
   ui_print " - Disabling file-based encryption (FBE) for /data..."
 
+  # S10 Qualcomm = fstab.qcom.
   # S10 range = fstab.exynos9820.
   # Note 10 range = fstab.exynos9825.
   # A[124]0 range = fstab.exynos7885.
   # A50 = fstab.exynos9610.
   # Tab A 10.1 range = fstab.exynos7885.
   #
-  for i in /vendor/etc/fstab.exynos[0-9][0-9][0-9][0-9]; do
+  for i in /vendor/etc/fstab.[exynos,qcom][0-9][0-9][0-9][0-9]; do
     # Option 1: This replaces the offending line.
     #sed -i -e 's/fileencryption=[^,]*/encryptable/' $i
 
@@ -131,7 +132,7 @@ disable_vaultkeeper() {
 disable_proca() {
   ui_print " - Disabling process authentication..."
 
-  # G97[035]F = pa_daemon.rc
+  # G97[035][F0] = pa_daemon.rc
   # G977B, N97[05]F, A105F, A505F = pa_daemon_teegris.rc
   # T510 + T515 = pa_daemon_kinibi.rc
   #
@@ -155,7 +156,7 @@ disable_recovery_restoration() {
 ui_print " "
 print_full_bar
 print_justified "Multi-disabler v1.6 for"
-print_justified "G97[035][FN], G977B, N97[05][FN] & N976B,"
+print_justified "G97[035][FN0], G977B, N97[05][FN] & N976B,"
 print_justified "A[1245]05[FN], A105M, A[25]05G, A[25]05[YG]N,"
 print_justified "A405FM and T51[05]."
 print_justified "by Ian Macdonald"
@@ -173,7 +174,7 @@ fw=${bl:$((${#bl} - 4)):4}
 #
 device=${bl:0:$((${#bl} - 8))}
 
-if echo $device | grep -Ev 'G97([035][FN]|7B)|N97([05][FN]|6B)|A([1245]05[FN]|105M|[25]05([YG]N|G)|405FM)|T51[05]' >/dev/null; then
+if echo $device | grep -Ev 'G97([035][FN0]|7B)|N97([05][FN]|6B)|A([1245]05[FN]|105M|[25]05([YG]N|G)|405FM)|T51[05]' >/dev/null; then
   ui_print " - Unsupported device detected. Installation aborted."
   ui_print " "
   exit 1
